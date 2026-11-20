@@ -1,0 +1,32 @@
+---
+- name: Мой первый плейбук (с переменными)
+  hosts: targets
+  become: yes
+  vars:
+    package_name: nginx
+    service_name: nginx
+
+  tasks:
+    - name: Установить {{ package_name }}
+      apt:
+        name: "{{ package_name }}"
+        state: present
+        update_cache: yes
+
+    - name: Запустить {{ service_name }} и добавить в автозагрузку
+      service:
+        name: "{{ service_name }}"
+        state: started
+        enabled: yes
+
+    - name: Скопировать кастомную страницу Nginx
+      template:
+        src: templates/index.html.j2
+        dest: /var/www/html/index.html
+      notify: Restart nginx
+
+  handlers:
+    - name: Restart nginx
+      service:
+        name: nginx
+        state: restarted

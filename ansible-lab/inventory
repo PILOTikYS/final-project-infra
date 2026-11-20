@@ -1,0 +1,2 @@
+[targets]
+target-server ansible_host=51.250.74.46 ansible_user=devops

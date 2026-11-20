@@ -1,0 +1,29 @@
+---
+- name: Установка k3s на чистый сервер
+  hosts: targets
+  become: yes
+
+  tasks:
+    - name: Обновить кэш пакетов
+      apt:
+        update_cache: yes
+
+    - name: Установить необходимые утилиты
+      apt:
+        name:
+          - curl
+          - socat
+          - conntrack
+        state: present
+
+    - name: Скачать и установить k3s
+      shell: |
+        curl -sfL https://get.k3s.io | sh -
+      args:
+        creates: /usr/local/bin/k3s  # Не запускать повторно, если уже установлено
+
+    - name: Проверить, что k3s запустился
+      service:
+        name: k3s
+        state: started
+        enabled: yes
