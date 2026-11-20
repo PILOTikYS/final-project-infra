@@ -18,6 +18,7 @@ data "yandex_compute_image" "ubuntu" {
   family = "ubuntu-2404-lts"
 }
 
+#Создание подсети в yandex-cloud
 resource "yandex_vpc_subnet" "my_subnet" {
   name           = "final-subnet-v2"
   zone           = "ru-central1-a"
@@ -25,6 +26,7 @@ resource "yandex_vpc_subnet" "my_subnet" {
   v4_cidr_blocks = ["10.0.4.0/24"]
 }
 
+#Создание VM, пользователя, передача ключа
 resource "yandex_compute_instance" "vm" {
   name = "final-vm"
 
@@ -59,6 +61,7 @@ resource "yandex_compute_instance" "vm" {
   }
 }
 
+#Вывод ip vm в терминал послн создания
 output "vm_ip" {
   value = yandex_compute_instance.vm.network_interface[0].nat_ip_address
 }
